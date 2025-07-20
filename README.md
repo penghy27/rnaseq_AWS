@@ -1,10 +1,11 @@
-# RNA-seq FASTQ Retrieval, Compression & Preprocessing (AWS EC2 Workflow)
+# RNA-seq FASTQ Retrieval, Compression & Preprocessing, (pseudo)alignment, quantification
+ (AWS EC2 Workflow)
 
 ## Environment
-Instance type: t3.large (2 vCPU, 8 GB RAM)
-Storage: Start with 60 GB EBS (default is 30 GB, too small for multiple FASTQ files)
-Operating System: Ubuntu 20.04 or later
-Environment manager: Conda
+Instance type: t3.large (2 vCPU, 8 GB RAM)  
+Storage: Start with 60 GB EBS (default is 30g GB, too small for multiple FASTQ files  )
+Operating System: Ubuntu 20.04 or later  
+Environment manager: Conda  
 
 ## Workflow Overview
 Step 1: Create EC2 & Set Up Environment
@@ -29,7 +30,7 @@ Step 2: Retrieve RNA-seq Data (FASTQ)
 bash getSRA.sh
 ```
 
-Step 3: Compress FASTQ Files Using pigz
+Step 3: Compress FASTQ Files Using pigz  
 Due to limited storage space, here we compress fastq files to .gz
 
 ```
@@ -39,5 +40,49 @@ cd raw_data/
 pigz *.fastq
 ```
 
-⚠️ pigz will automatically delete original .fastq files after successful compression.
-Each 9–11 GB FASTQ will typically compress down to ~2.5–3.5 GB .fastq.gz.
+⚠️ pigz will automatically delete original .fastq files after successful compression.  
+Each 9–11 GB FASTQ will typically compress down to ~2.5–3.5 GB .fastq.gz.  
+
+Step 4: Quality Control (FastQC)
+
+```
+bash fastqc.sh
+
+```
+
+Step 5: Adapter & Quality Trimming (Trimmomatic)
+
+```
+bash seqTrim.sh
+```
+
+Step 6: Transcript Quantification (Salmon pseudoalignment)
+```
+salmonQuant_SE.sh
+```
+
+Step 7: Import into R (tximport + DESeq2)
+```
+tximport.R
+DEseq.R
+```
+
+Optional: STAR Alignment (ongoing work)  
+
+If full genome alignment is needed for downstream applications (e.g., splice junction detection, variant calling)
+
+```
+star.sh
+```
+
+### Recommended Folder Structure
+project/
+├── raw_dat              # FASTQ (.gz)a
+├── reference            # Transcriptome fasta + Salmon index
+├── results              # All output run by scripts
+└── script               # All shell scripts
+
+
+
+
+
