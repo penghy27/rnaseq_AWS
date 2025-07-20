@@ -76,12 +76,13 @@ star.sh
 ```
 
 ### Recommended Folder Structure
+```
 project/
 ├── raw_dat              # FASTQ (.gz)a
 ├── reference            # Transcriptome fasta + Salmon index
 ├── results              # All output run by scripts
 └── script               # All shell scripts
-
+```
 
 
 
