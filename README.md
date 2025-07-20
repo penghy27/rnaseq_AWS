@@ -63,7 +63,6 @@ bash salmonQuant_SE.sh
 
 Step 7: Import into R (tximport + DESeq2)
 ```
-tximport.R
 DEseq.R
 ```
 
